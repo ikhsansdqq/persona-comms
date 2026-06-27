@@ -5,6 +5,7 @@ import { classifyText } from '@/lib/intelligence/classify';
 import { extractExpense } from '@/lib/intelligence/ocr';
 import { appendRecord } from '@/lib/storage/d1';
 import { buildReply } from '@/lib/format/reply';
+import { isCommand, handleCommand } from '@/lib/core/commands';
 
 export async function handleUpdate(update: TelegramUpdate): Promise<void> {
   const message = update.message;
@@ -27,8 +28,16 @@ export async function handleUpdate(update: TelegramUpdate): Promise<void> {
 
     const text = message.text ?? message.caption;
     if (text) {
+      if (isCommand(text)) {
+        await sendMessage(chatId, await handleCommand(chatId, text));
+        return;
+      }
+
       const result = await classifyText(text);
-      await appendRecord(update, result);
+      // chat messages are conversational — reply but don't store
+      if (result.type !== 'chat') {
+        await appendRecord(update, result);
+      }
       await sendMessage(chatId, buildReply(result));
     }
   } catch (err) {

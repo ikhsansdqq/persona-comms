@@ -22,6 +22,10 @@ export function buildReply(result: ClassifyResult): string {
       if (d.merchant) parts.push(`at ${d.merchant}`);
       return parts.join(' ');
     }
+    case 'chat': {
+      const d = result.data as { reply?: string };
+      return d.reply ?? 'Hey!';
+    }
     case 'unknown':
       return '✓ Saved as note';
   }

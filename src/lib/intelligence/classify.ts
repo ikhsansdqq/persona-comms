@@ -3,7 +3,7 @@ import type { ClassifyResult, ClassifyType } from '@/lib/types';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const SYSTEM = `Classify the user message into exactly one type: todo, task, expense, or unknown.
+const SYSTEM = `Classify the user message into exactly one type: todo, task, expense, chat, or unknown.
 Return compact JSON only — no prose, no markdown:
 {"type":"<type>","data":<object>}
 
@@ -11,9 +11,10 @@ Types:
 - todo: something to remember or buy. data: {"note":"<string>"}
 - task: an action to complete. data: {"action":"<string>","due":"<YYYY-MM-DD or null>"}
 - expense: money spent. data: {"amount":<number or null>,"currency":"<ISO or null>","merchant":"<string or null>","description":"<string>"}
-- unknown: anything else. data: {"raw":"<string>"}`;
+- chat: greeting, small talk, question, or anything conversational with no intent to save. data: {"reply":"<a short helpful response>"}
+- unknown: something that should be saved but doesn't fit the above. data: {"raw":"<string>"}`;
 
-const VALID_TYPES = new Set<ClassifyType>(['todo', 'task', 'expense', 'unknown']);
+const VALID_TYPES = new Set<ClassifyType>(['todo', 'task', 'expense', 'chat', 'unknown']);
 
 export async function classifyText(text: string): Promise<ClassifyResult> {
   try {

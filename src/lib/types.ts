@@ -1,4 +1,4 @@
-export type ClassifyType = 'todo' | 'task' | 'expense' | 'unknown';
+export type ClassifyType = 'todo' | 'task' | 'expense' | 'unknown' | 'chat';
 
 export interface ClassifyResult {
   type: ClassifyType;

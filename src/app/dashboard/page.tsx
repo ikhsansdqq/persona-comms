@@ -10,7 +10,7 @@ export default async function Dashboard() {
     getRecords(CHAT_ID),
   ]);
 
-  const counts = { todo: 0, task: 0, expense: 0, unknown: 0 };
+  const counts: Record<string, number> = { todo: 0, task: 0, expense: 0, unknown: 0 };
   for (const r of recent) counts[r.type] = (counts[r.type] ?? 0) + 1;
 
   return (

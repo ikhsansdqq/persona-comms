@@ -49,6 +49,13 @@ export async function getRecords(chatId: number, type?: string): Promise<D1Recor
   ) as Promise<D1Record[]>;
 }
 
+export async function getRecordsSince(chatId: number, since: string): Promise<D1Record[]> {
+  return d1Query(
+    `SELECT * FROM records WHERE chat_id = ? AND created_at >= ? ORDER BY created_at DESC`,
+    [chatId, since],
+  ) as Promise<D1Record[]>;
+}
+
 export async function getMonthlyExpenses(
   chatId: number,
 ): Promise<Array<{ month: string; total: number; count: number }>> {
